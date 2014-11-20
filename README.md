@@ -1,2 +1,2 @@
-gui-pylint
+GUI-Pylint
 ==========
