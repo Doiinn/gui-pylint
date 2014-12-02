@@ -29,6 +29,7 @@ class Gpylint(object):
         self.data = ''
         self.filetype = ''
         self.body = ''
+        self.returned = ''
         return
 
     def get_content_type(self):
@@ -78,6 +79,10 @@ class Gpylint(object):
             request.add_header('Content-type', self.get_content_type())
             request.add_header('Content-length', len(self.body))
             request.add_data(self.body)
-            return urllib2.urlopen(request).read()
+            self.returned = urllib2.urlopen(request).read()
+            return
+    def read(self):
+        ''' return html result '''
+        return self.returned
 
     
