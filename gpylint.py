@@ -11,6 +11,7 @@ import os
 import itertools
 import mimetools
 import mimetypes
+import urllib2
 from cStringIO import StringIO
 from glob import glob
 
@@ -24,7 +25,16 @@ class Gpylint(object):
         ''' initialize local variable '''
         self.filename = None
         self.filepath = ''
+        self.boundary = mimetools.choose_boundary()
         self.data = ''
+        self.filetype = ''
+        self.body = ''
+        return
+
+    def get_content_type(self):
+        ''' return type of content '''
+        return 'multipart/form-data; boundary=%s' % self.boundary
+
     def makepath(self, filepath):
         ''' return a path of file '''
         if '\\' not in filepath:
@@ -41,9 +51,33 @@ class Gpylint(object):
             self.filename = filepath.split('\\')[-1]
             self.filepath = filepath
             f = open(filepath, 'r')
-            self.data = f.read()
+            self.data = StringIO(f.read()).read()
+            self.filetype = mimetypes.guess_type(self.filename)[0]
             f.close()
             return {'Pass': 'Ok!'}
         else:
             return {'Error':'File type or file path.'}
+    def encoded(self):
+        ''' return encoded multipart'''
+        flat = list(itertools.chain(['--'+self.boundary, 'Content-Disposition: file; name="uploadedfile"; filename="%s"' % \
+        self.filename, 'Content-Type: %s' % self.filetype, '\r\n' + self.data]))
+        flat.append('--' + self.boundary + '--')
+        flat.append('')
+        self.body = '\r\n'.join(flat)
+        return
 
+    def make_upload(self, filepath):
+        ''' make upload '''
+        addfile = self.add_file(filepath)
+        if 'Error' in addfile:
+            return addfile
+        else:
+            self.encoded()
+            request = urllib2.Request('http://antares.sip.ucm.es/cesar/pylint/evaluation.php')
+            request.add_header('User-agent', 'madooding v.0.0.1')
+            request.add_header('Content-type', self.get_content_type())
+            request.add_header('Content-length', len(self.body))
+            request.add_data(self.body)
+            return urllib2.urlopen(request).read()
+
+    
