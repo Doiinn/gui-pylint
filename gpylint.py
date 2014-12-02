@@ -21,6 +21,7 @@ class Gpylint(object):
         gpy = Gpylint()
     '''
     def __init__(self):
+        ''' initialize local variable '''
         self.filename = None
         self.filepath = ''
         self.data = ''
