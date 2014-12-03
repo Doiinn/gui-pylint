@@ -5,9 +5,18 @@ Madooding : 57070112
 ====================
 """
 from Tkinter import *
+import ImageTk
+
 root = Tk()
 root.title("GUI-Pylint")    #title bar of app
-frame = Frame(width=450, height=450) #frame(or windows) size
+
+frame = Frame(root, width=450, height=450) #frame(or windows) size
 frame.pack()
+
+applogo = Canvas(frame, width=400, height=147)
+applogo.pack()
+
+applogo_img = ImageTk.PhotoImage(file="gpy-logo.png")
+applogo.create_image(200, 75, image=applogo_img)
 
 root.mainloop()
