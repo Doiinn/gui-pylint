@@ -8,6 +8,7 @@ from Tkinter import *
 import ImageTk
 
 root = Tk()
+root.resizable(0,0) #set to disable resize window
 root.title("GUI-Pylint")    #title bar of app
 
 frame = Frame(root, width=450, height=450) #frame(or windows) size
