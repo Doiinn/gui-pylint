@@ -82,6 +82,7 @@ class Gpylint(object):
             self.returned = {'Pass' : {'Status': 'Ok!', 'Data' : self.split(urllib2.urlopen(request).read())}}
             return
     def split(self, rawdata):
+        ''' Split raw data and return a list '''
         rawdata, spl = rawdata.split('\n'), []
         for i in xrange(14, len(rawdata)):
             if rawdata[i] == 'Report':
