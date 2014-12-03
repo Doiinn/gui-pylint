@@ -55,9 +55,9 @@ class Gpylint(object):
             self.data = StringIO(f.read()).read()
             self.filetype = mimetypes.guess_type(self.filename)[0]
             f.close()
-            return {'Pass': 'Ok!'}
+            return {'Pass': {'Status' : 'Ok!'}}
         else:
-            return {'Error':'File type or file path.'}
+            return {'Error' : {'Status' : 'File type or file path.'}}
     def encoded(self):
         ''' return encoded multipart'''
         flat = list(itertools.chain(['--'+self.boundary, 'Content-Disposition: file; name="uploadedfile"; filename="%s"' % \
@@ -67,7 +67,7 @@ class Gpylint(object):
         self.body = '\r\n'.join(flat)
         return
 
-    def make_upload(self, filepath):
+    def analysis(self, filepath):
         ''' make upload '''
         addfile = self.add_file(filepath)
         if 'Error' in addfile:
@@ -79,8 +79,15 @@ class Gpylint(object):
             request.add_header('Content-type', self.get_content_type())
             request.add_header('Content-length', len(self.body))
             request.add_data(self.body)
-            self.returned = urllib2.urlopen(request).read()
+            self.returned = {'Pass' : {'Status': 'Ok!', 'Data' : self.split(urllib2.urlopen(request).read())}}
             return
+    def split(self, rawdata):
+        rawdata, spl = rawdata.split('\n'), []
+        for i in xrange(14, len(rawdata)):
+            if rawdata[i] == 'Report':
+                break
+            spl += [rawdata[i]]
+        return spl[:-2]
     def read(self):
         ''' return html result '''
         return self.returned
