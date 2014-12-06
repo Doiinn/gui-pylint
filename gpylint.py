@@ -3,7 +3,7 @@ PSIT PROJECT - GUI Pylint
 
 Author:
  - Worapong Malaiwong
- - Sirirach Junta 57070112 Section 3
+ - Sirirach Junta 57070112 Section 3 w
 
 '''
 import re
@@ -67,8 +67,9 @@ class Gpylint(object):
         self.body = '\r\n'.join(flat)
         return
 
-    def analysis(self, filepath):
+    def analysis(self, filepath=None):
         ''' make upload '''
+        filepath = self.filepath if filepath == None else filepath
         addfile = self.add_file(filepath)
         if 'Error' in addfile:
             return addfile
@@ -83,14 +84,30 @@ class Gpylint(object):
             return
     def split(self, rawdata):
         ''' Split raw data and return a list '''
-        rawdata, spl = rawdata.split('\n'), []
+        rawdata, spl, count = rawdata.split('\n'), [], 0
         for i in xrange(14, len(rawdata)):
-            if rawdata[i] == 'Report':
+            if rawdata[i] == 'Report' or rawdata[i] == '':
                 break
-            spl += [rawdata[i]]
+            temp, slist = rawdata[i], []
+            if temp[0] == ' ':
+                ttt = spl.pop()
+                ttt[2] += '\n' + temp[4:]
+                spl.append(ttt)
+                continue
+            while len(slist) < 2:
+                slist.append(temp[:temp.find(':')])
+                temp = temp[temp.find(':')+1:].strip()
+            slist.append(temp.strip())
+            spl += [slist]
         return spl[:-2]
     def read(self):
         ''' return html result '''
         return self.returned
 
-    
+def main():
+    ''' this is a main function '''
+    obj = Gpylint()
+    obj.analysis(raw_input('Path of file ex:(%s\\a.py): ' % os.getcwd()))
+    print (obj.read()['Pass']['Data'])
+
+main()
