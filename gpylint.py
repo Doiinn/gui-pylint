@@ -6,6 +6,7 @@ Author:
  - Sirirach Junta 57070112 Section 3 w
 
 '''
+import unittest
 import re
 import os
 import itertools
@@ -15,7 +16,7 @@ import urllib2
 from cStringIO import StringIO
 from glob import glob
 
-class Gpylint(object):
+class Gpylint(unittest.TestCase):
     '''
      make variable as Gpylint object 
      Usage:
@@ -72,6 +73,7 @@ class Gpylint(object):
         filepath = self.filepath if filepath == None else filepath
         addfile = self.add_file(filepath)
         if 'Error' in addfile:
+            self.returned = addfile
             return addfile
         else:
             self.encoded()
@@ -80,7 +82,10 @@ class Gpylint(object):
             request.add_header('Content-type', self.get_content_type())
             request.add_header('Content-length', len(self.body))
             request.add_data(self.body)
-            self.returned = {'Pass' : {'Status': 'Ok!', 'Data' : self.split(urllib2.urlopen(request).read())}}
+            try:
+                self.returned = {'Pass' : {'Status': 'Ok!', 'Data' : self.split(urllib2.urlopen(request).read())}}    
+            except:
+                self.returned = {'Error' : {'Status': 'Could\'t connect to server.'}}
             return
     def split(self, rawdata):
         ''' Split raw data and return a list '''
@@ -108,6 +113,6 @@ def main():
     ''' this is a main function '''
     obj = Gpylint()
     obj.analysis(raw_input('Path of file ex:(%s\\a.py): ' % os.getcwd()))
-    print (obj.read()['Pass']['Data'])
+    print obj.read()
 
 main()
