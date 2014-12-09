@@ -2,8 +2,8 @@
 PSIT PROJECT - GUI Pylint
 
 Author:
- - Worapong Malaiwong
- - Sirirach Junta 57070112 Section 3 w
+ - Worapong Malaiwong 57070103 Section 3
+ - Sirirach Junta 57070112 Section 3
 
 '''
 import unittest
@@ -111,8 +111,9 @@ class Gpylint(unittest.TestCase):
 
 def main():
     ''' this is a main function '''
-    obj = Gpylint()
-    obj.analysis(raw_input('Path of file ex:(%s\\a.py): ' % os.getcwd()))
-    print obj.read()
+    pass
+    #obj = Gpylint()
+    #obj.analysis(raw_input('Path of file ex:(%s\\a.py): ' % os.getcwd()))
+    #print obj.read()
 
 main()
