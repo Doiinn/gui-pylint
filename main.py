@@ -21,14 +21,32 @@ def about_window():
 	dev_b = Label(about, text="Worapong Malaiwong 57070103").pack()
 
 def open_file():
-	name = file_dialog.askopenfilename(filetypes=[("Python files", "*.py")])
-	file_path.set(name)
-	python_file = open(name, "r")
+    name = file_dialog.askopenfilename(filetypes=[("Python files", "*.py")])
+    if name != '':
+        file_path.set(name)
+    #python_file = open(name, "r")
 
 def gpylint_checker():
-	obj = Gpylint()
-	obj.analysis(file_path.get().replace('/', '\\'))
-	print obj.read()
+    if file_path.get() == 'Select file...':
+        dialog.showerror(title="GUI-Pylint", message="Please Select a file before upload.")
+    else:
+        obj = Gpylint()
+        obj.analysis(file_path.get().replace('/', '\\'))
+        result = obj.read()
+        print result #for test
+        if 'Error' in result:
+            dialog.showerror(title="Error", message=result['Error']['Status'])
+        result_windows = Toplevel()
+        result_windows.resizable(0,0)
+        listbox = Listbox(result_windows, width=116, height=(len(result['Pass']['Data'])+5))
+        listbox.pack()
+        listbox.insert(END, result_header.get())
+        listbox.insert(END, file_path.get())
+        if result['Pass']['Data'] == []:
+            listbox.insert(END, "========================================No Problem!========================================")
+        else:
+            for item in result['Pass']['Data']:
+                listbox.insert(END, item)
 
 root = Tk()
 root.resizable(0,0) #set to disable resize window
@@ -39,7 +57,9 @@ frame.pack()
 
 #Variable
 file_path = StringVar()
+result_header = StringVar()
 file_path.set("Select file...")
+result_header.set("========================================GUI-Pylint========================================")
 
 #Menu Bar
 menubar = Menu(root) #create menu bar
