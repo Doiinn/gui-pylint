@@ -3,10 +3,9 @@ PSIT PROJECT - GUI Pylint
 
 Author:
  - Worapong Malaiwong
- - Sirirach Junta 57070112 Section 3 w
+ - Sirirach Junta 57070112 Section 3
 
 '''
-import unittest
 import re
 import os
 import itertools
@@ -16,7 +15,7 @@ import urllib2
 from cStringIO import StringIO
 from glob import glob
 
-class Gpylint(unittest.TestCase):
+class Gpylint(object):
     '''
      make variable as Gpylint object 
      Usage:
@@ -104,15 +103,8 @@ class Gpylint(unittest.TestCase):
                 temp = temp[temp.find(':')+1:].strip()
             slist.append(temp.strip())
             spl += [slist]
-        return spl[:-2]
+        return spl
     def read(self):
         ''' return html result '''
         return self.returned
 
-def main():
-    ''' this is a main function '''
-    obj = Gpylint()
-    obj.analysis(raw_input('Path of file ex:(%s\\a.py): ' % os.getcwd()))
-    print obj.read()
-
-main()
