@@ -2,13 +2,10 @@
 PSIT PROJECT - GUI Pylint
 
 Author:
-<<<<<<< HEAD
  - Worapong Malaiwong
 =======
  - Worapong Malaiwong 57070103 Section 3
->>>>>>> b92d17e131d3f69a2ee7c5e3d25678b341f7dd96
  - Sirirach Junta 57070112 Section 3
-
 '''
 import re
 import os
@@ -112,8 +109,6 @@ class Gpylint(object):
         ''' return html result '''
         return self.returned
 
-<<<<<<< HEAD
-=======
 def main():
     ''' this is a main function '''
     pass
@@ -122,4 +117,3 @@ def main():
     #print obj.read()
 
 main()
->>>>>>> b92d17e131d3f69a2ee7c5e3d25678b341f7dd96
